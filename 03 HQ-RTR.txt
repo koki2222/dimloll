@@ -121,6 +121,7 @@ EOF
 
 
 --------DHCP------------(сам)
+не забудь в /etc/sysconfig поменять порт на "vlan200"
 
 systemctl enable --now dhcpd
 

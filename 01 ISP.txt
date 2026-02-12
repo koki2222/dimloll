@@ -25,14 +25,11 @@ echo '172.16.5.1/28' > /etc/net/ifaces/ens21/ipv4address
 apt-get update && apt-get install iptables -y
 
 +++
-Iptables -t nat -A POSTROUTING -o ens19 -j MASQUERADE
-Iptables-save > /etc/sysconfig/iptables
+iptables -t nat -A POSTROUTING -o ens19 -j MASQUERADE
+iptables-save > /etc/sysconfig/iptables
 systemctl enable –now iptables
 
 +++
-cat /etc/nftables/nftables.nft 
-
-systemctl enable --now nftables
 
 -------включение маршрутизации---------
 

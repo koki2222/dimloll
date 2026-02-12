@@ -49,17 +49,12 @@ echo $'search au-team.irpo\nnameserver 127.0.0.1' > /etc/net/ifaces/ens19/resolv
 Заходим в каталог:/etc/dnsmasq.d создаём файл с любым именем обязательно.conf получаем: /etc/dnsmasq.d/name.conf
 Заходим в редактор и прописываем
 domain=au-team.irpo
-#домен днс сервера.
 no-resolv
-#Не обращаться к resolve.conf
 server=77.88.8.8
 server=77.88.8.3
-#обращение к общедоступному dns
 cache-size=1000
 max-cache-ttl=86400
-#кеширование
-interface=ens19.200
-#интерфейс интернета
+interface=ens19
 address=/hq-srv.au-team.irpo/192.168.1.2
 address=/hq-rtr.au-team.irpo/192.168.1.1
 address=/hq-cli.au-team.irpo/192.168.2.2
@@ -77,79 +72,6 @@ ptr-record=2.2.168.192.in-addr.arpa,hq-cli.au-team.irpo
 Прописываем nameserver 192.168.1.2 
 Сохраняем 
 И прописываем: nslookup hq-srv.au-team.irpo и смотрим. Если есть ответ то хорошо, если нет проверьте что все сделали правильно:)
-
---------BIND9---------------
-
-rndc-confgen -a -c /etc/bind/rndc.key
-+++
-
-cat <<'EOF' > /etc/bind/options.conf
-logging { };
-options {
- listen-on { localnets; 127.0.0.1; };
- forwarders { 77.88.8.7; 77.88.8.3; };
- recursion yes;
- allow-recursion { any; };
- allow-query { any; };
- dnssec-validation no;
- 
- directory "/etc/bind/zone";
- dump-file "/var/run/named/named_dump.db";
- statistics-file "/var/run/named/named.stats";
- recursing-file "/var/run/named/named.recursing"; 
- secroots-file "/var/run/named/named.scroots";
- pid-file none;
-};
-zone "au-team.irpo" {
- type master;
- file "au-team.irpo";
-};
-zone "168.192.in-addr.arpa" {
- type master;
- file "168.192.in-addr.arpa";
-};
-EOF
-+++
-
-+++
-cat <<'EOF' > /etc/bind/zone/au-team.irpo
-$TTL  1D
-@    IN   SOA   au-team.irpo. root.au-team.irpo. (
-                2025020600 ; serial
-                12H        ; refresh
-                1H         ; retry
-                1W         ; expire
-                1H         ; ncache
-            )
-@       IN  NS    hq-srv.au-team.irpo.
-hq-rtr  IN   A    192.168.100.1
-hq-srv  IN   A    192.168.100.2
-hq-cli  IN   A    192.168.200.2
-br-rtr  IN   A    192.168.1.1
-br-srv  IN   A    192.168.1.2
-docker  IN   A    172.16.1.1
-web     IN   A    172.16.2.1
-EOF
-+++
-
-+++
-cat <<'EOF' > /etc/bind/zone/168.192.in-addr.arpa
-$TTL  1D
-@    IN   SOA   au-team.irpo. root.au-team.irpo. (
-                2025020600 ; serial
-                12H        ; refresh
-                1H         ; retry
-                1W         ; expire
-                1H         ; ncache
-            )
-      IN   NS    au-team.irpo.
-1.100 IN   PTR   hq-rtr.au-team.irpo.
-2.100 IN   PTR   hq-srv.au-team.irpo.
-2.200 IN   PTR   hq-cli.au-team.irpo.
-EOF
-+++
-chown :named /etc/bind/zone/au-team.irpo /etc/bind/zone/168.192.in-addr.arpa
-systemctl enable --now bind
 
 service network restart
 host br-rtr
