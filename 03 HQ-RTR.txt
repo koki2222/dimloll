@@ -10,7 +10,7 @@ exec bash
 +++++++++++NETWORK++++++++++++++++++++++++
 
 mkdir -p /etc/net/ifaces/{ens{19,20},vlan{100,200,999},gre1}
-echo 'TYPE=eth' | tee /etc/net/ifaces/ens{1,2}/options
+echo 'TYPE=eth' | tee /etc/net/ifaces/ens{19,20}/options
 
 
 -------to ISP------
