@@ -55,7 +55,7 @@ ping zz.ru -c 2
 
 -------установка необходимого ПО-------
 
-apt-get update && apt-get install sudo tzdata frr dhcp-server iptables -y
+apt-get update && apt-get install sudo tzdata frr dhcp-server iptables mc -y
 
 
 --------OSPF--------------
@@ -71,8 +71,8 @@ echo $'search au-team.irpo\nnameserver 192.168.1.2' > /etc/net/ifaces/vlan100/re
 
 -------iptables.nft
 +++
-Iptables -t nat -A POSTROUTING -o ens19 -j MASQUERADE
-Iptables-save > /etc/sysconfig/iptables
+iptables -t nat -A POSTROUTING -o ens19 -j MASQUERADE
+iptables-save > /etc/sysconfig/iptables
 systemctl enable –now iptables
 
 +++
