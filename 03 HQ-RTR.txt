@@ -57,6 +57,12 @@ ping zz.ru -c 2
 
 apt-get update && apt-get install sudo tzdata frr dhcp-server iptables -y
 
+
+--------OSPF--------------
+sed -i 's/ospfd=no/ospfd=yes/' /etc/frr/daemons ; grep ospf /etc/frr/daemons
+
+
+
 --------смена DNS-----------
 rm -f /etc/net/ifaces/ens19/resolv.conf
 echo $'search au-team.irpo\nnameserver 192.168.1.2' > /etc/net/ifaces/vlan100/resolv.conf
@@ -83,9 +89,6 @@ usermod -aG wheel net_admin
 echo "WHEEL_USERS ALL=(ALL:ALL) NOPASSWD: ALL" > /etc/sudoers.d/net_admin
 su -l net_admin
 sudo id
-
---------OSPF--------------
-sed -i 's/ospfd=no/ospfd=yes/' /etc/frr/daemons ; grep ospf /etc/frr/daemons
 
 +++
 cat <<'EOF' > /etc/frr/frr.conf
@@ -123,7 +126,7 @@ EOF
 --------DHCP------------(сам)
 не забудь в /etc/sysconfig поменять порт на "vlan200"
 
-systemctl enable --now dhcpd
+systemctl enable --now dhcpd frr
 
 systemctl restart network
 cat /etc/resolv.conf
