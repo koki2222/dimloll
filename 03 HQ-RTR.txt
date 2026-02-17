@@ -14,8 +14,8 @@ echo 'TYPE=eth' | tee /etc/net/ifaces/ens{19,20}/options
 
 
 -------to ISP------
-echo '172.16.4.2/28' > /etc/net/ifaces/ens19/ipv4address
-echo 'default via 172.16.4.1' > /etc/net/ifaces/ens19/ipv4route
+echo '172.16.1.2/28' > /etc/net/ifaces/ens19/ipv4address
+echo 'default via 172.16.1.1' > /etc/net/ifaces/ens19/ipv4route
 echo 'nameserver 8.8.8.8' > /etc/net/ifaces/ens19/resolv.conf
 
 --------настройка VLAN-----------
@@ -37,8 +37,8 @@ sed -i 's/net.ipv4.ip_forward = 0/net.ipv4.ip_forward = 1/' /etc/net/sysctl.conf
 cat << EOF > /etc/net/ifaces/gre1/options
 TYPE=iptun
 TUNTYPE=gre
-TUNLOCAL=172.16.4.2
-TUNREMOTE=172.16.5.2
+TUNLOCAL=172.16.1.2
+TUNREMOTE=172.16.2.2
 TUNOPTIONS='ttl 64'
 
 EOF
